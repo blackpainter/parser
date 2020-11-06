@@ -45,6 +45,10 @@ type Node interface {
 	SetOriginTextPosition(offset int)
 	// OriginTextPosition get the start offset of this node in the origin text.
 	OriginTextPosition() int
+	SetSQLType(sql_type string)
+	SQLType() string
+	SetKwd(kwd string)
+	Kwd() string
 }
 
 // Flags indicates whether an expression contains certain types of expression.

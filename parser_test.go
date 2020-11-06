@@ -44,6 +44,18 @@ type testParserSuite struct {
 	enableWindowFunc bool
 }
 
+func TestMostSimple(t *testing.T) {
+	parser := parser.New()
+	src := fmt.Sprintf("SELECT if(t.A>100, 'ok', 'no'), case when a.A<=1000 then 'ok' else 'no' end FROM t left join t1 on t.id=t1.tid where t.B=1 and (t.C=2 or t.C=3) for update wait 30")
+	node, warns, err := parser.Parse(src, "", "")
+	if len(warns) > 0 {
+		t.Error(warns, node, Commentf("source %s", src))
+	}
+	if err != nil {
+		t.Error(err, node, Commentf("source %s", src))
+	}
+}
+
 func (s *testParserSuite) TestSimple(c *C) {
 	parser := parser.New()
 

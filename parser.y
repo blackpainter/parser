@@ -7975,19 +7975,21 @@ FetchFirstOpt:
 SelectStmtLimit:
 	"LIMIT" LimitOption
 	{
-		$$ = &ast.Limit{Count: $2.(ast.ExprNode)}
+		$$ = &ast.Limit{Kwd: "limit", Count: $2.(ast.ExprNode)}
 	}
 |	"LIMIT" LimitOption ',' LimitOption
 	{
-		$$ = &ast.Limit{Offset: $2.(ast.ExprNode), Count: $4.(ast.ExprNode)}
+		$$ = &ast.Limit{Kwd: "limit", Offset: $2.(ast.ExprNode), Count: $4.(ast.ExprNode)}
 	}
 |	"LIMIT" LimitOption "OFFSET" LimitOption
 	{
-		$$ = &ast.Limit{Offset: $4.(ast.ExprNode), Count: $2.(ast.ExprNode)}
+		$$ = &ast.Limit{Kwd: "limit", Offset: $4.(ast.ExprNode), Count: $2.(ast.ExprNode)}
 	}
 |	"FETCH" FirstOrNext FetchFirstOpt RowOrRows "ONLY"
 	{
-		$$ = &ast.Limit{Count: $3.(ast.ExprNode)}
+		l := ast.Limit{Kwd: "fetch", Sql_type: ast.TypeDb2, Count: $3.(ast.ExprNode)}
+		l.SetSQLType(ast.TypeDb2)
+		$$ = &l
 	}
 
 SelectStmtLimitOpt:
@@ -8187,10 +8189,12 @@ SelectLockOpt:
 	}
 |	"FOR" "UPDATE" "WAIT" NUM
 	{
-		$$ = &ast.SelectLockInfo{
-			LockType: ast.SelectLockForUpdateWaitN,
-			WaitSec:  getUint64FromNUM($4),
-		}
+	    l := ast.SelectLockInfo{
+             			LockType: ast.SelectLockForUpdateWaitN,
+             			WaitSec:  getUint64FromNUM($4),
+             		}
+        l.SetSQLType(ast.TypeOracle)
+		$$ = &l
 	}
 |	"LOCK" "IN" "SHARE" "MODE"
 	{

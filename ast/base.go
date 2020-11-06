@@ -17,11 +17,19 @@ import (
 	"github.com/pingcap/parser/types"
 )
 
+const (
+	TypeMysql = ""
+	TypeOracle = "ora"
+	TypeDb2 = "db2"
+)
+
 // node is the struct implements node interface except for Accept method.
 // Node implementations should embed it in.
 type node struct {
-	text   string
-	offset int
+	text     string
+	offset   int
+	sql_type string
+	kwd      string
 }
 
 // SetOriginTextPosition implements Node interface.
@@ -42,6 +50,22 @@ func (n *node) SetText(text string) {
 // Text implements Node interface.
 func (n *node) Text() string {
 	return n.text
+}
+
+func (n *node) SQLType() string {
+	return n.sql_type
+}
+
+func (n *node) SetSQLType(sql_type string) {
+	n.sql_type = sql_type
+}
+
+func (n *node) Kwd() string{
+	return n.kwd
+}
+
+func (n *node) SetKwd(kwd string){
+	n.kwd = kwd
 }
 
 // stmtNode implements StmtNode interface.

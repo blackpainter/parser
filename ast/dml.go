@@ -460,8 +460,10 @@ const (
 )
 
 type SelectLockInfo struct {
+	node
 	LockType SelectLockType
 	WaitSec  uint64
+	Sql_type string
 }
 
 // String implements fmt.Stringer.
